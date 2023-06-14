@@ -1,3 +1,5 @@
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Base64;
 
 import javax.naming.PartialResultException;
@@ -47,19 +49,27 @@ class Solution {
         // }
 
         //快排
+        // int left = 0;
+        // int right = nums.length-1;
+        // quickSort(nums,left,right);
+        // return nums;
+        
+        //归并排序
         int left = 0;
         int right = nums.length-1;
-        quickSort(nums,left,right);
+        mergeSort(nums,left,right);
         return nums;
+        
     }
-    public void quickSort(int[] nums, int left, int right ){
-        if (left < right) {
-            int povit = partition(nums,left,right);
-            // System.out.println("povit:"+povit);
-            quickSort(nums,left,povit-1);
-            quickSort(nums,povit+1,right);
-        }  
-    }
+    // 快排 start
+    // public void quickSort(int[] nums, int left, int right ){
+    //     if (left < right) {
+    //         int povit = partition(nums,left,right);
+    //         // System.out.println("povit:"+povit);
+    //         quickSort(nums,left,povit-1);
+    //         quickSort(nums,povit+1,right);
+    //     }  
+    // }
     //lomuto分区-同向
     // public int partition(int[] nums, int left, int right ){
     //     int base = right;
@@ -98,30 +108,71 @@ class Solution {
     //     return left;
     // }
     //hoare分区-挖坑
-    public int partition(int[] nums, int left, int right ){
-        int base = nums[right];
-        // System.out.println("right:"+right);
-        // System.out.println("left:"+left);
-        while (left < right) {
-            while (left < right && nums[left]<=base){
-                left++;
-            }
-            if (left < right){
-                nums[right] = nums[left]; 
-                right--;
-            }          
-            while (left < right && nums[right]>=base) {
-                right--;
-            }
-            if (left < right){
-                nums[left] = nums[right];
-                left++;  
-            }
+    // public int partition(int[] nums, int left, int right ){
+    //     int base = nums[right];
+    //     // System.out.println("right:"+right);
+    //     // System.out.println("left:"+left);
+    //     while (left < right) {
+    //         while (left < right && nums[left]<=base){
+    //             left++;
+    //         }
+    //         if (left < right){
+    //             nums[right] = nums[left]; 
+    //             right--;
+    //         }          
+    //         while (left < right && nums[right]>=base) {
+    //             right--;
+    //         }
+    //         if (left < right){
+    //             nums[left] = nums[right];
+    //             left++;  
+    //         }
                     
-        }
-        nums[left] = base;
-        return left;
+    //     }
+    //     nums[left] = base;
+    //     return left;
+    // }
+    // 快排 end
+
+    //归并 start
+    public void mergeSort(int[] nums, int left, int right){
+        if (left < right) {
+            int mid = left+(right-left)/2;
+            mergeSort(nums, left, mid);
+            mergeSort(nums, mid+1, right);
+            merge(nums,left,mid,right);
+        }       
     }
+    public void merge(int[] nums, int left, int mid, int right){
+        int lp = left;
+        int rp = mid+1;
+        int[] tmp = new int[right-left+1];
+        int tp = 0;
+        while(lp <= mid && rp <= right){
+            if (nums[lp] <= nums[rp]){
+                tmp[tp++] = nums[lp++];
+            } else {
+                tmp[tp++] = nums[rp++];
+            }
+        }
+        if (lp == mid+1) {
+            // tmp = append(tmp,nums[rp]...)
+            for (int i = rp; i <= right; i++) {
+                tmp[tp++] = nums[i];
+            }
+        }
+        if (rp == right+1){
+            // tmp = append(tmp,nums[rp]...)
+            for (int i = lp; i <= mid; i++) {
+                tmp[tp++] = nums[i];
+            }
+        }
+        for (int i : tmp) {
+            nums[left++] = i;
+        } 
+          
+    }
+    
 }
 // @lc code=end
 
